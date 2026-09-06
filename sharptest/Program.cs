@@ -9,22 +9,38 @@ namespace sharptest
         static readonly HttpClient httpClient = new HttpClient();
         static async Task Main(string[] args)
         {
-            string serverIP = "speedtst-tim.asianvision.com.ph";
+            // read the json file containing the public servers
+            string jsonText = File.ReadAllText("servers.json");
+
+            // make the deserializer ignore case
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+            // deserialize json and map it to C# objects
+            // null-coalescing or ?? operator provides a backup if .Deserialize returns null
+            List<SpeedTestServer> servers = JsonSerializer.Deserialize<List<SpeedTestServer>>(jsonText, options) ?? throw new InvalidOperationException("JSON data is null.");
+
+            string serverIP = "test1.newworldcatv.ph";
             int serverPort = 8080;
 
             try
-            {
+            {   
+                // iterate through list of servers in the JSON file
+                for (int i = 0; i < servers.Count; i++ )
+                {
+                    SpeedTestServer server = servers[i];
+                    Console.WriteLine($"Index {i} -> City: {server.City}, Latitude: {server.Lat}, Longtitude: {server.Long}");
+                }
+
+
+
                 // get public IP address
                 string publicIPAdd = await httpClient.GetStringAsync("https://api.ipify.org");
                 Console.WriteLine("Public IP Address: " + publicIPAdd);
-
+                
                 // send IP address to geo locator
                 string geolocRawJsonResponse = await httpClient.GetStringAsync($"http://ip-api.com/json/{publicIPAdd}");
-                
-                using JsonDocument document = JsonDocument.Parse(geolocRawJsonResponse);
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                string formattedJson = JsonSerializer.Serialize(document, options);
-                Console.WriteLine(formattedJson);
+                GeoLocation myLocation = JsonSerializer.Deserialize<GeoLocation>(geolocRawJsonResponse, options) ?? throw new InvalidOperationException("JSON data is null.");
+                Console.WriteLine($"Your location: {myLocation.City}, Lat: {myLocation.Lat}, Long: {myLocation.Lon}");
 
                 Console.WriteLine($"Connecting to server {serverIP}:{serverPort} ...");
 
@@ -95,11 +111,28 @@ namespace sharptest
     }
     public class SpeedTestServer
     {
-        public string City { get; set; }
-        public string Isp { get; set; }
-        public string Host { get; set; }
-        int Port { get; set; }
+        public string City { get; set; } = string.Empty;
+        public string Isp { get; set; } = string.Empty;
+        public string Host { get; set; } = string.Empty;
+        public int Port { get; set; }
         public double Lat { get; set; }
+        public double Long { get; set; }
+    }
+    public class GeoLocation
+    {
+        public string Status { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
+        public double Lat { get; set; }
+        // geolocation api uses lon instead of long 😡
         public double Lon { get; set; }
+    }
+    public class HaverSineFormula()
+    {
+        
+
+        public static double CovertToRadians(double angleInDegrees)
+        {
+            return (Math.PI / 180.0) * angleInDegrees; 
+        }
     }
 }

@@ -1,8 +1,104 @@
 [
     {
-        "city": "Angles", "isp": "Converge ICT", "host": "clk-srv03.convergeict.com", "port": "8080", "lat": "", "long":""
+        "city": "Angles", "isp": "Converge ICT Solutions Inc.", "host": "clk-srv04.convergeict.com", "port": 8080, "lat": 15.156311, "long": 120.591774
     },
     {
-
+        "city": "Antipolo", "isp": "Globe Telecom", "host": "ant2-speedtest.globe.com.ph", "port": 8080, "lat": 14.6258, "long": 121.1225
+    }, 
+    {
+        "city": "Bacolod", "isp": "Globe Telecom", "host": "bcn-speedtest.globe.com.ph", "port": 8080, "lat": 10.6764, "long": 122.9508
+    },
+    {
+        "city": "Baguio", "isp": "Smart Communications Inc.", "host": "baguiocity.smart.com.ph", "port": 8080, "lat": 16.411999, "long": 120.59834
+    },
+    {
+        "city": "Cagayan De Oro", "isp": "DctecH Microservices Incorporated", "host": "speedtest1-cdo.dctechmicro.com", "port": 8080, "lat": 8.477217, "long": 124.645920
+    },
+    {
+        "city": "Cagayan De Oro", "isp": "PLDT", "host": "119.92.238.98", "port": 8080, "lat": 8.477217, "long": 124.645920
+    }, 
+    {
+        "city": "Carmona", "isp": "Asian Vision", "host": "speedtst-tim.asianvision.com.ph", "port": 8080, "lat": 14.309243, "long": 121.031708
+    },
+    {
+        "city": "Cebu City", "isp": "PLDT", "host": "119.92.223.221", "port": 8080, "lat": 10.3157, "long": 123.8854
+    },
+    {
+        "city": "Cebu City", "isp": "Globe Telecom", "host": "lhg2-speedtest.globe.com.ph", "port": 8080, "lat": 10.3157, "long": 123.8854
+    },
+    {
+        "city": "Dagupan City", "isp": "USATV One Inc", "host": "fiber.bangus.com", "port": 8080, "lat": 16.0431, "long": 12.3333
+    }, 
+    {
+        "city": "IloIlo", "isp": "Globe Telecom", "host": "ilo-speedtest.globe.com.ph", "port": 8080, "lat": 10.720321, "long": 122.562019
+    },
+    {
+        "city": "Imus", "isp": "Globe Telecom", "host": "imu2-speedtest.globe.com.ph", "port": 8080, "lat": 14.42972, "long": 120.93667
+    },
+    {
+        "city": "Lucena", "isp": "MyCATV Broadband", "host": "speedtst-que.asianvision.com.ph", "port": 8080, "lat": 13.9350, "long": 121.6124
+    },
+    {
+        "city": "Lucena", "isp": "PLDT", "host": "119.92.238.90", "port": 8080, "lat": 13.9350, "long": 121.6124
+    },
+    {
+        "city": "Lucena", "isp": "Smart Communications Inc.", "host": "lucenacity.smart.com.ph", "port": 8080, "lat": 13.9350, "long": 121.6124
+    },
+    {
+        "city": "Makati", "isp": "PLDT", "host": "122.2.174.30", "port": 8080, "lat": 14.5566, "long": 121.0234
+    }, 
+    {
+        "city": "Makati", "isp": "Smart Communications Inc.", "host": "laspinas1.smart.com.ph", "port": 8080, "lat": 14.5566, "long": 121.0234
+    },
+    {
+        "city": "Makati", "isp": "Philippine Global Communications, Inc.", "host": "speedtest.philcom.com.ph", "port": 8080, "lat": 14.5566, "long": 121.0234
+    },
+    {
+        "city": "Makati", "isp": "Globe Telecom", "host": "speedtest.globe.com.ph", "port": 8080, "lat": 14.5566, "long": 121.0234
+    },
+    {
+        "city": "Makati", "isp": "Philippine Telegram and Telephone Corp", "host": "speedtest.ptt.net.ph", "port": 8080, "lat": 14.5566, "long": 121.0234
+    }, 
+    {
+        "city": "Mandaluyong City", "isp": "Planet Cable Inc.", "host": "speedtest.planetcabletv.com", "port": 8080, "lat": 14.5794, "long": 121.0358
+    },
+    {
+        "city": "Manila", "isp": "Globe Telecom", "host": "mnl-speedtest.globe.com.ph", "port": 8080, "lat": 14.599512, "long": 120.984222
+    },
+    {
+        "city": "Manila", "isp": "Smart Communications Inc.", "host": "greenhills.smart.com.ph", "port": 8080, "lat": 14.599512, "long": 120.984222
+    },
+    {
+        "city": "Manila", "isp": "PLDT", "host": "119.92.238.50", "port": 8080, "lat": 14.599512, "long": 120.984222
+    },
+    {
+        "city": "Olongapo", "isp": "MyCATV Broadband", "host": "speedtst-zmb.asianvision.com.ph", "port": 8080, "lat": 14.82917, "long": 120.28278
+    },
+    {
+        "city": "Parañaque", "isp": "Cablelink Internet Services Inc.", "host": "speedtest1.cablelink.com.ph", "port": 8080, "lat": 14.4793, "long": 121.0198
+    },
+    {
+        "city": "Pasig City", "isp": "Source Telecoms", "host": "speedtest.sourcetelecoms.com.ph", "port": 8080, "lat": 14.5869, "long": 121.0614
+    },
+    {
+        "city": "Pasig City", "isp": "PLDT", "host": "119.92.223.206", "port": 8080, "lat": 14.5869, "long": 121.0614
+    }, 
+    {
+        "city": "Quezon City", "isp": "Globe Telecom", "host": "qc2-speedtest.globe.com.ph", "port": 8080, "lat": 14.6487, "long": 121.0478
+    },
+    {
+        "city": "Quezon City", "isp": "PLDT", "host": "119.92.223.158", "port": 8080, "lat": 14.6487, "long": 121.0478
+    },
+    {
+        "city": "Santa Rosa", "isp": "Royal Cable", "host": "speedtest1.royalcable.com.ph", "port": 8080, "lat": 14.2843, "long": 121.0889
+    }, 
+    {
+        "city": "Tacloban", "isp": "Globe Telecom", "host": "tac-speedtest.globe.com.ph", "port": 8080, "lat": 11.2433, "long": 125.0047
+    },
+    {
+        "city": "Taguig", "isp": "Globe Telecom", "host": "tgt-speedtest.globe.com.ph", "port": 8080, "lat": 14.5243, "long": 121.0792
+    },
+    {
+        "city": "Tarlac", "isp": "Globe Telecom", "host": "tlc2-speedtest.globe.com.ph", "port": 8080, "lat": 15.48017, "long": 120.59794
     }
 ]
