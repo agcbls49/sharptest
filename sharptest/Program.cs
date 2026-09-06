@@ -10,6 +10,15 @@ namespace sharptest
         static readonly HttpClient httpClient = new HttpClient();
         static async Task Main(string[] args)
         {
+            // ping 5 servers 
+            // await GetServersToPing();
+                        
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+        }
+        // code for getting servers to ping
+        public static async Task GetServersToPing()
+        {
             string dashes = "-----------------------------------";
 
             // read the json file containing the public servers
@@ -52,10 +61,11 @@ namespace sharptest
 
                 // call the function which will test all 5 servers
                 var pingResults = new List<(SpeedTestServer server, long pingMs)>();
+                
                 foreach (var entry in closestServers)
                 {
                     Console.WriteLine($"Connecting to server {entry.server.Host}:{entry.server.Port} ...");
-                    long pingMs = await TestAllServers(entry.server.Host, entry.server.Port);
+                    long pingMs = await PingAllServers(entry.server.Host, entry.server.Port);
                     pingResults.Add((entry.server, pingMs));
                 }
 
@@ -65,7 +75,7 @@ namespace sharptest
                 foreach (var result in sortedPingResults)
                 {
                     Console.WriteLine(dashes);
-                    Console.WriteLine("Ping Results");
+                    Console.WriteLine("Ping Results:");
                     Console.WriteLine($"City: {result.server.City}, Ping: {result.pingMs} ms");
                 }
             }
@@ -73,11 +83,9 @@ namespace sharptest
             {
                 Console.WriteLine("Something went wrong: ", e.Message);
             }
-                        
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
         }
-        public static async Task<long> TestAllServers(string serverIP, int serverPort)
+        // code for pinging servers
+        public static async Task<long> PingAllServers(string serverIP, int serverPort)
         {
             try 
             {
