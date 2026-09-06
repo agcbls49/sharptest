@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Net.Sockets;
+using System.Linq;
 
 namespace sharptest
 {
@@ -19,20 +20,11 @@ namespace sharptest
             // null-coalescing or ?? operator provides a backup if .Deserialize returns null
             List<SpeedTestServer> servers = JsonSerializer.Deserialize<List<SpeedTestServer>>(jsonText, options) ?? throw new InvalidOperationException("JSON data is null.");
 
-            string serverIP = "test1.newworldcatv.ph";
-            int serverPort = 8080;
+            // list to hold each server paired with its distance
+            var serverDistances = new List<(SpeedTestServer server, double distance)>();
 
             try
             {   
-                // iterate through list of servers in the JSON file
-                for (int i = 0; i < servers.Count; i++ )
-                {
-                    SpeedTestServer server = servers[i];
-                    Console.WriteLine($"Index {i} -> City: {server.City}, Latitude: {server.Lat}, Longtitude: {server.Long}");
-                }
-
-
-
                 // get public IP address
                 string publicIPAdd = await httpClient.GetStringAsync("https://api.ipify.org");
                 Console.WriteLine("Public IP Address: " + publicIPAdd);
@@ -40,10 +32,51 @@ namespace sharptest
                 // send IP address to geo locator
                 string geolocRawJsonResponse = await httpClient.GetStringAsync($"http://ip-api.com/json/{publicIPAdd}");
                 GeoLocation myLocation = JsonSerializer.Deserialize<GeoLocation>(geolocRawJsonResponse, options) ?? throw new InvalidOperationException("JSON data is null.");
-                Console.WriteLine($"Your location: {myLocation.City}, Lat: {myLocation.Lat}, Long: {myLocation.Lon}");
+                Console.WriteLine($"Your location: {myLocation.City}, Lat: {myLocation.Lat}, Long: {myLocation.Lon}"); 
+
+                // iterate through list of servers in the JSON file
+                for (int i = 0; i < servers.Count; i++)
+                {
+                    SpeedTestServer server = servers[i];
+                    double distance = HaversineFormula.CalculateDistance(myLocation.Lat, myLocation.Lon, server.Lat, server.Long);
+                    serverDistances.Add((server, distance));
+                }
+
+                // sort the completed list with smallest distance first
+                var sortedDistances = serverDistances.OrderBy(x => x.distance).ToList();
+
+                // take the 5 closest servers 
+                var closestServers = sortedDistances.Take(5).ToList();
+
+                // print sorted results
+                // foreach (var entry in closestServers)
+                // {
+                //     Console.WriteLine($"City: {entry.server.City}, Distance: {entry.distance:F2} km");
+                // }
+
+                // get the closest server to use for the tcp client code
+                string serverIP = closestServers[0].server.Host;
+                int serverPort = closestServers[0].server.Port;
 
                 Console.WriteLine($"Connecting to server {serverIP}:{serverPort} ...");
 
+                foreach (var entry in closestServers)
+                {
+                    await TestAllServers(entry.server.Host, entry.server.Port);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong: ", e.Message);
+            }
+                        
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+        }
+        public static async Task TestAllServers(string serverIP, int serverPort)
+        {
+            try 
+            {
                 // create tcp client to reach out to a server
                 using TcpClient tcpClient = new TcpClient();
                 tcpClient.Connect(serverIP, serverPort);
@@ -104,9 +137,6 @@ namespace sharptest
             {
                 Console.WriteLine("Socket Error: ", e.Message);
             }
-            
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
         }
     }
     public class SpeedTestServer
@@ -125,14 +155,5 @@ namespace sharptest
         public double Lat { get; set; }
         // geolocation api uses lon instead of long 😡
         public double Lon { get; set; }
-    }
-    public class HaverSineFormula()
-    {
-        
-
-        public static double CovertToRadians(double angleInDegrees)
-        {
-            return (Math.PI / 180.0) * angleInDegrees; 
-        }
     }
 }

@@ -27,7 +27,7 @@
         "city": "Cebu City", "isp": "Globe Telecom", "host": "lhg2-speedtest.globe.com.ph", "port": 8080, "lat": 10.3157, "long": 123.8854
     },
     {
-        "city": "Dagupan City", "isp": "USATV One Inc", "host": "fiber.bangus.com", "port": 8080, "lat": 16.0431, "long": 12.3333
+        "city": "Dagupan City", "isp": "USATV One Inc", "host": "fiber.bangus.com", "port": 8080, "lat": 16.0431, "long": 120.3333
     }, 
     {
         "city": "IloIlo", "isp": "Globe Telecom", "host": "ilo-speedtest.globe.com.ph", "port": 8080, "lat": 10.720321, "long": 122.562019
