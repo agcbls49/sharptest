@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Net.Sockets;
-using System.Linq;
+using System.Diagnostics;
 
 namespace sharptest
 {
@@ -10,6 +10,8 @@ namespace sharptest
         static readonly HttpClient httpClient = new HttpClient();
         static async Task Main(string[] args)
         {
+            string dashes = "-----------------------------------";
+
             // read the json file containing the public servers
             string jsonText = File.ReadAllText("servers.json");
 
@@ -48,21 +50,23 @@ namespace sharptest
                 // take the 5 closest servers 
                 var closestServers = sortedDistances.Take(5).ToList();
 
-                // print sorted results
-                // foreach (var entry in closestServers)
-                // {
-                //     Console.WriteLine($"City: {entry.server.City}, Distance: {entry.distance:F2} km");
-                // }
-
-                // get the closest server to use for the tcp client code
-                string serverIP = closestServers[0].server.Host;
-                int serverPort = closestServers[0].server.Port;
-
-                Console.WriteLine($"Connecting to server {serverIP}:{serverPort} ...");
-
+                // call the function which will test all 5 servers
+                var pingResults = new List<(SpeedTestServer server, long pingMs)>();
                 foreach (var entry in closestServers)
                 {
-                    await TestAllServers(entry.server.Host, entry.server.Port);
+                    Console.WriteLine($"Connecting to server {entry.server.Host}:{entry.server.Port} ...");
+                    long pingMs = await TestAllServers(entry.server.Host, entry.server.Port);
+                    pingResults.Add((entry.server, pingMs));
+                }
+
+                // sort by actual measured ping time
+                var sortedPingResults = pingResults.OrderBy(x => x.pingMs).ToList();
+
+                foreach (var result in sortedPingResults)
+                {
+                    Console.WriteLine(dashes);
+                    Console.WriteLine("Ping Results");
+                    Console.WriteLine($"City: {result.server.City}, Ping: {result.pingMs} ms");
                 }
             }
             catch (Exception e)
@@ -73,14 +77,14 @@ namespace sharptest
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
-        public static async Task TestAllServers(string serverIP, int serverPort)
+        public static async Task<long> TestAllServers(string serverIP, int serverPort)
         {
             try 
             {
                 // create tcp client to reach out to a server
                 using TcpClient tcpClient = new TcpClient();
                 tcpClient.Connect(serverIP, serverPort);
-                Console.WriteLine("Connected to the server successfully!");
+                Console.WriteLine("Connected to the server successfully! \n");
 
                 // allows to send or receive data from a streacm socket
                 using NetworkStream networkStream = tcpClient.GetStream();
@@ -91,7 +95,6 @@ namespace sharptest
                 
                 // converts text message into bytes so it can actually be transmitted to server
                 await networkStream.WriteAsync(sendBuffer, 0, sendBuffer.Length);
-                Console.WriteLine($"Sent: {messageToSend}");
 
                 // read response back from the server
                 byte[] receiveBuffer = new byte[1024];
@@ -103,25 +106,36 @@ namespace sharptest
                 {
                     // convert raw bytes from server to text
                     string responseMessage = Encoding.UTF8.GetString(receiveBuffer, 0, bytesRead);
-                    Console.WriteLine($"Received from server: {responseMessage}");
                     
                     // send another message (in this case a ping) to the server 
                     string pingMessage = "PING " + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "\n";
                     byte[] pingBuffer = Encoding.UTF8.GetBytes(pingMessage);
+
+                    // create the timer
+                    Stopwatch stopwatch = Stopwatch.StartNew();
+
+                    // record the timestamp when sending
+                    DateTime requestSentTime = DateTime.UtcNow;
                     
                     // converts text message into bytes so it can actually be transmitted to server
                     await networkStream.WriteAsync(pingBuffer, 0, pingBuffer.Length);
-                    Console.WriteLine($"Sent: {pingMessage}");
 
                     // stores the bytes received from the server
                     int pingBytesRead = await networkStream.ReadAsync(receiveBuffer, 0, receiveBuffer.Length);
 
                     if(pingBytesRead > 0)
                     {
+                        // stop timer after receiving a response from the server
+                        stopwatch.Stop();
+                        DateTime requestCompletedTime = DateTime.UtcNow;
+
                         // convert raw bytes from server to text
                         string pingResponse = Encoding.UTF8.GetString(receiveBuffer, 0, pingBytesRead);
-                        Console.WriteLine($"Received from server: {pingResponse}");
-                        
+
+                        // Get the elapsed time of ping sent to pong received
+                        long milliseconds = stopwatch.ElapsedMilliseconds;
+
+                        return milliseconds;
                     }
                 } 
                 else
@@ -137,6 +151,8 @@ namespace sharptest
             {
                 Console.WriteLine("Socket Error: ", e.Message);
             }
+            // Error occured
+            return -1;
         }
     }
     public class SpeedTestServer
