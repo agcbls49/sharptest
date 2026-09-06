@@ -24,7 +24,7 @@ namespace sharptest
 
         public static double ConvertToRadians(double angleInDegrees)
         {
-            return (Math.PI / 180.0) * angleInDegrees; 
+            return Math.PI / 180.0 * angleInDegrees; 
         }
     }
 }
