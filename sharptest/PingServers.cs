@@ -90,7 +90,7 @@ namespace sharptest
             {
                 // create tcp client to reach out to a server
                 using TcpClient tcpClient = new TcpClient();
-                tcpClient.Connect(serverIP, serverPort);
+                await tcpClient.ConnectAsync(serverIP, serverPort);
                 Console.WriteLine("Connected to the server successfully! \n");
 
                 // allows to send or receive data from a stream socket

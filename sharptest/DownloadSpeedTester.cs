@@ -116,11 +116,11 @@ namespace sharptest
         }
         public static async Task<long> DownloadDataOnTheServer(string serverIP, int serverPort)
         {
-            try 
+            try
             {
                 // create tcp client to reach out to a server
                 using TcpClient tcpClient = new TcpClient();
-                tcpClient.Connect(serverIP, serverPort);
+                await tcpClient.ConnectAsync(serverIP, serverPort);
                 Console.WriteLine("Connected to the server successfully! \n");
 
                 // allows to send or receive data from a stream socket
@@ -129,8 +129,8 @@ namespace sharptest
                 // send a message to the server which is to download data
                 // 20MB
                 string messageToSend = "DOWNLOAD 20000000\n";
-                byte[] sendBuffer = Encoding.UTF8.GetBytes(messageToSend);  
-                
+                byte[] sendBuffer = Encoding.UTF8.GetBytes(messageToSend);
+
                 // converts text message into bytes so it can actually be transmitted to server
                 await networkStream.WriteAsync(sendBuffer, 0, sendBuffer.Length);
 
@@ -139,13 +139,10 @@ namespace sharptest
                 byte[] receiveBuffer = new byte[65536];
 
                 // stores the bytes received from the server
-                int bytesRead = await networkStream.ReadAsync(receiveBuffer, 0, receiveBuffer.Length);
-
-                // asjdjahsd
                 long totalBytesReceived = 0;
                 long targetBytes = 20000000;
 
-                while(totalBytesReceived < targetBytes)
+                while (totalBytesReceived < targetBytes)
                 {
                     int bytesReadThisChunk = await networkStream.ReadAsync(receiveBuffer, 0, receiveBuffer.Length);
 
@@ -153,10 +150,11 @@ namespace sharptest
                     {
                         break;
                     }
+
                     totalBytesReceived += bytesReadThisChunk;
                     Console.WriteLine($"BYTES READ THIS CHUNK: {bytesReadThisChunk}");
                 }
-            
+
                 return totalBytesReceived;
             }
             catch (HttpRequestException e)
@@ -167,8 +165,9 @@ namespace sharptest
             {
                 Console.WriteLine($"Socket Error: {e.Message}");
             }
-            // Error occured
-            return -1;
+
+            // Error occurred
+            return 0;
         }
         public class SpeedTestServer
         {

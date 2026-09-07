@@ -23,10 +23,10 @@ namespace sharptest
 
             switch (input)
             {
-                case "A":
+                case "A" or "a":
                     await PingTopFiveServers.GetServersToPing();
                     break;
-                case "B":
+                case "B" or "b":
                     await DownloadFromClosestServer.DownloadSpeedTester();
                     break;
                 default:
