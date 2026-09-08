@@ -32,6 +32,8 @@ namespace sharptest
 
             // list to hold each server paired with its distance
             var serverDistances = new List<(SpeedTestServer server, double distance)>();
+            Console.WriteLine();
+            Console.WriteLine(dashes);
 
             try
             {   
@@ -43,6 +45,7 @@ namespace sharptest
                 string geolocRawJsonResponse = await httpClient.GetStringAsync($"http://ip-api.com/json/{publicIPAdd}");
                 GeoLocation myLocation = JsonSerializer.Deserialize<GeoLocation>(geolocRawJsonResponse, options) ?? throw new InvalidOperationException("JSON data is null.");
                 Console.WriteLine($"Your location: {myLocation.City}, Lat: {myLocation.Lat}, Long: {myLocation.Lon}"); 
+                Console.WriteLine(dashes);
 
                 // iterate through list of servers in the JSON file
                 for (int i = 0; i < servers.Count; i++)
@@ -60,7 +63,8 @@ namespace sharptest
 
                 // call the function which will test all 5 servers
                 var pingResults = new List<(SpeedTestServer server, long pingMs)>();
-                
+                Console.WriteLine();
+
                 foreach (var entry in closestServers)
                 {
                     Console.WriteLine($"Connecting to server {entry.server.Host}:{entry.server.Port} ...");

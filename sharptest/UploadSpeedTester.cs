@@ -30,6 +30,8 @@ namespace sharptest
 
             // list to hold each server paired with its distance
             var serverDistances = new List<(SpeedTestServer server, double distance)>();
+            Console.WriteLine();
+            Console.WriteLine(dashes);
 
             try
             {   
@@ -58,7 +60,8 @@ namespace sharptest
 
                 // call the function which will test all 5 servers
                 var pingResults = new List<(SpeedTestServer server, long pingMs)>();
-                
+                Console.WriteLine();
+
                 foreach (var entry in closestServers)
                 {
                     Console.WriteLine($"Connecting to server {entry.server.Host}:{entry.server.Port} ...");
@@ -76,22 +79,24 @@ namespace sharptest
                     Console.WriteLine($"City: {result.server.City}, Host: {result.server.Isp}, Ping: {result.pingMs} ms");
                 }
 
+                Console.WriteLine();
+
                 var bestServer = sortedPingResults[0].server;
 
-                Console.WriteLine($"Connecting to server {bestServer.Host}:{bestServer.Port} ...");
+                Console.WriteLine($"Connecting to server of {bestServer.Isp} located at {bestServer.City} ...");
 
                 // start the time
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
                 // run the upload code 4 times
-                var task1 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task2 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task3 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task4 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task5 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task6 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task7 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task8 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task1 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 1);
+                var task2 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 2);
+                var task3 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 3);
+                var task4 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 4);
+                var task5 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 5);
+                var task6 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 6);
+                var task7 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 7);
+                var task8 = UploadDataOnTheServer(bestServer.Host, bestServer.Port, 8);
 
                 // combine all 4 download results and sum them together
                 long[] results = await Task.WhenAll(task1, task2, task3, task4, task5, task6, task7, task8);
@@ -114,14 +119,14 @@ namespace sharptest
                 Console.WriteLine("Something went wrong: ", e.Message);
             }
         }
-        public static async Task<long> UploadDataOnTheServer(string serverIP, int serverPort)
-        {
+        public static async Task<long> UploadDataOnTheServer(string serverIP, int serverPort, int taskId)
+        {            
             try
             {
                 // create tcp client to reach out to a server
                 using TcpClient tcpClient = new TcpClient();
                 await tcpClient.ConnectAsync(serverIP, serverPort);
-                Console.WriteLine("Connected to the server successfully! \n");
+                Console.WriteLine($"[Task {taskId}] Connected to the server successfully!");
 
                 // allows to send or receive data from a stream socket
                 using NetworkStream networkStream = tcpClient.GetStream();
@@ -139,11 +144,13 @@ namespace sharptest
                 long totalBytesSent = 0;
                 long targetBytes = 20000000;
 
+                Console.WriteLine($"[Task {taskId}] Uploading to the server. Please wait...");
+
                 while (totalBytesSent < targetBytes)
                 {
                     int bytesToSend = (int)Math.Min(uploadChunk.Length, targetBytes - totalBytesSent);
                     await networkStream.WriteAsync(uploadChunk, 0, bytesToSend);
-                    Console.WriteLine($"Total bytes sent: {totalBytesSent}");
+                    // Console.WriteLine($"Total bytes sent: {totalBytesSent}");
                     totalBytesSent += bytesToSend;
                 }
                 return totalBytesSent;

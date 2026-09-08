@@ -36,8 +36,8 @@ namespace sharptest
                     Console.WriteLine("Not a valid option.");
                 break;
             }
-                        
-            Console.WriteLine("\n Press any key to exit.");
+            Console.WriteLine();
+            Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
         public static void TitleScreen()
