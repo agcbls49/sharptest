@@ -1,6 +1,6 @@
 [
     {
-        "city": "Angles", "isp": "Converge ICT Solutions Inc.", "host": "clk-srv04.convergeict.com", "port": 8080, "lat": 15.156311, "long": 120.591774
+        "city": "Angeles", "isp": "Converge ICT Solutions Inc.", "host": "clk-srv04.convergeict.com", "port": 8080, "lat": 15.156311, "long": 120.591774
     },
     {
         "city": "Antipolo", "isp": "Globe Telecom", "host": "ant2-speedtest.globe.com.ph", "port": 8080, "lat": 14.6258, "long": 121.1225
@@ -48,7 +48,7 @@
         "city": "Makati", "isp": "PLDT", "host": "122.2.174.30", "port": 8080, "lat": 14.5566, "long": 121.0234
     }, 
     {
-        "city": "Makati", "isp": "Smart Communications Inc.", "host": "laspinas1.smart.com.ph", "port": 8080, "lat": 14.5566, "long": 121.0234
+        "city": "Las Piñas", "isp": "Smart Communications Inc.", "host": "laspinas1.smart.com.ph", "port": 8080, "lat": 14.45056, "long": 120.98278
     },
     {
         "city": "Makati", "isp": "Philippine Global Communications, Inc.", "host": "speedtest.philcom.com.ph", "port": 8080, "lat": 14.5566, "long": 121.0234
@@ -66,7 +66,7 @@
         "city": "Manila", "isp": "Globe Telecom", "host": "mnl-speedtest.globe.com.ph", "port": 8080, "lat": 14.599512, "long": 120.984222
     },
     {
-        "city": "Manila", "isp": "Smart Communications Inc.", "host": "greenhills.smart.com.ph", "port": 8080, "lat": 14.599512, "long": 120.984222
+        "city": "San Juan", "isp": "Smart Communications Inc.", "host": "greenhills.smart.com.ph", "port": 8080, "lat": 14.6022, "long": 121.0394
     },
     {
         "city": "Manila", "isp": "PLDT", "host": "119.92.238.50", "port": 8080, "lat": 14.599512, "long": 120.984222

@@ -5,16 +5,16 @@ namespace sharptest
     using System.Net.Sockets;
     using System.Diagnostics;
 
-    public static class DownloadFromClosestServer
+    public static class UploadFromClosestServer
     {
         static readonly HttpClient httpClient = new HttpClient();
-        public static async Task DownloadSpeedTester()
+        public static async Task UploadSpeedTester()
         {
-            await DownloadData();
+            await UploadData();
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
-        public static async Task DownloadData()
+        public static async Task UploadData()
         {
             string dashes = "-----------------------------------";
 
@@ -83,15 +83,15 @@ namespace sharptest
                 // start the time
                 Stopwatch stopwatch = Stopwatch.StartNew();
 
-                // run the download code 4 times
-                var task1 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task2 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task3 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task4 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task5 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task6 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task7 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
-                var task8 = DownloadDataOnTheServer(bestServer.Host, bestServer.Port);
+                // run the upload code 4 times
+                var task1 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task2 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task3 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task4 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task5 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task6 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task7 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
+                var task8 = UploadDataOnTheServer(bestServer.Host, bestServer.Port);
 
                 // combine all 4 download results and sum them together
                 long[] results = await Task.WhenAll(task1, task2, task3, task4, task5, task6, task7, task8);
@@ -106,15 +106,15 @@ namespace sharptest
                 double mbps = totalBytes * 0.008 / elapsedMs;
 
                 Console.WriteLine(dashes);
-                Console.WriteLine("Download Results:");
-                Console.WriteLine($"City: {bestServer.City}, Host: {bestServer.Isp}, Total Bytes: {totalBytes}, Time: {elapsedMs} ms, Server Download Speed Capped At: {mbps:F2} Mbps");            
+                Console.WriteLine("Upload Results:");
+                Console.WriteLine($"City: {bestServer.City}, Host: {bestServer.Isp}, Total Bytes: {totalBytes}, Time: {elapsedMs} ms, Server Upload Speed: {mbps:F2} Mbps");            
             }
             catch (Exception e)
             {
                 Console.WriteLine("Something went wrong: ", e.Message);
             }
         }
-        public static async Task<long> DownloadDataOnTheServer(string serverIP, int serverPort)
+        public static async Task<long> UploadDataOnTheServer(string serverIP, int serverPort)
         {
             try
             {
@@ -126,36 +126,27 @@ namespace sharptest
                 // allows to send or receive data from a stream socket
                 using NetworkStream networkStream = tcpClient.GetStream();
 
-                // send a message to the server which is to download data
+                // send a message to the server which is to upload data
                 // 20MB
-                string messageToSend = "DOWNLOAD 20000000\n";
+                string messageToSend = "UPLOAD 20000000 0\n";
                 byte[] sendBuffer = Encoding.UTF8.GetBytes(messageToSend);
 
                 // converts text message into bytes so it can actually be transmitted to server
                 await networkStream.WriteAsync(sendBuffer, 0, sendBuffer.Length);
 
-                // read response back from the server
-                // 64kb buffer
-                byte[] receiveBuffer = new byte[65536];
-
-                // stores the bytes received from the server
-                long totalBytesReceived = 0;
+                // dummy data to keep track of the uploaded bytes to the server
+                byte[] uploadChunk = new byte[65536]; // junk data, content doesn't matter
+                long totalBytesSent = 0;
                 long targetBytes = 20000000;
 
-                while (totalBytesReceived < targetBytes)
+                while (totalBytesSent < targetBytes)
                 {
-                    int bytesReadThisChunk = await networkStream.ReadAsync(receiveBuffer, 0, receiveBuffer.Length);
-
-                    if (bytesReadThisChunk == 0)
-                    {
-                        break;
-                    }
-
-                    totalBytesReceived += bytesReadThisChunk;
-                    Console.WriteLine($"Bytes read this chunk: {bytesReadThisChunk}");
+                    int bytesToSend = (int)Math.Min(uploadChunk.Length, targetBytes - totalBytesSent);
+                    await networkStream.WriteAsync(uploadChunk, 0, bytesToSend);
+                    Console.WriteLine($"Total bytes sent: {totalBytesSent}");
+                    totalBytesSent += bytesToSend;
                 }
-
-                return totalBytesReceived;
+                return totalBytesSent;
             }
             catch (HttpRequestException e)
             {
