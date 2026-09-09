@@ -14,7 +14,7 @@ namespace sharptest
             Console.WriteLine(dashes);
 
             string linodeFileUrl = "http://speedtest.singapore.linode.com/1GB-singapore.bin";
-            string savePath = @"D:\TestingSHARPTEST\1GB-singapore.bin";
+            string savePath = DownloadPath.GetDownloadPath("1GB-singapore.bin");
 
             try
             {

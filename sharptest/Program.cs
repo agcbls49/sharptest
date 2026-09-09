@@ -1,7 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
-using System.Net.Sockets;
-using System.Diagnostics;
+﻿using System.IO;
 
 namespace sharptest
 {
@@ -36,9 +33,11 @@ namespace sharptest
                     await UploadFromClosestServer.UploadSpeedTester();
                     break;
                 case "D" or "d":
+                    DownloadPath.CreateDirectory();
                     await DownloadOneHundredMB.DownloadSpeedInSG();
                     break;
                 case "E" or "e":
+                    DownloadPath.CreateDirectory();
                     await DownloadOneGB.DownloadSpeedInSG();
                     break;
                 default:
@@ -64,5 +63,6 @@ namespace sharptest
 
             Console.WriteLine(ascii);
         }
+        
     }
 }
