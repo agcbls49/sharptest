@@ -17,7 +17,10 @@ namespace sharptest
             Console.WriteLine("Type \"A\" to ping the five closest servers to you");
             Console.WriteLine("Type \"B\" to check the CAPPED download speed of the nearest server to you");
             Console.WriteLine("Type \"C\" to check the CAPPED upload speed of the nearest server to you");
+            Console.WriteLine("Type \"D\" to run a 100 MB download test (Singapore server)");
+            Console.WriteLine("Type \"E\" to run a 1 GB download test (Singapore server)");
 
+            Console.WriteLine();
             Console.Write("Enter your choice: ");
             string input = Console.ReadLine();
 
@@ -31,6 +34,12 @@ namespace sharptest
                     break;
                 case "C" or "c":
                     await UploadFromClosestServer.UploadSpeedTester();
+                    break;
+                case "D" or "d":
+                    await DownloadOneHundredMB.DownloadSpeedInSG();
+                    break;
+                case "E" or "e":
+                    await DownloadOneGB.DownloadSpeedInSG();
                     break;
                 default:
                     Console.WriteLine("Not a valid option.");
